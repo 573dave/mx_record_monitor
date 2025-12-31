@@ -105,7 +105,14 @@ function getMXRecords(domain) {
           hostname: parts[1].replace(/\.$/, '') // Remove trailing dot
         };
       })
-      .sort((a, b) => a.priority - b.priority)
+      .sort((a, b) => {
+        // Sort by priority first
+        if (a.priority !== b.priority) {
+          return a.priority - b.priority;
+        }
+        // If same priority, sort alphabetically by hostname for consistency
+        return a.hostname.localeCompare(b.hostname);
+      })
       .map(mx => `${mx.priority} ${mx.hostname}`)
       .join(' | ');
     
